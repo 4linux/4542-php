@@ -23,14 +23,21 @@ Lembre-se que um **DeploymentConfig** provisiona outros componentes e portanto e
 
 ## Exigências
 
-1. A aplicação **PHP** deve possuir **3** réplicas, e um **ConfigMap** deve ser montado em `/etc/opt/rh/rh-php71/php.ini` - Para funcionar, o ConfigMap deve ser adicionado via YAML utilizando `subPath`.
+1. A aplicação **PHP** deve possuir **3** réplicas, e um **ConfigMap** deve ser montado em `/app/php-ini/php.ini`.
 2. Dois **memcached** devem ser criados, porém cada qual com suas próprias configurações, serviços e pods - *não utilizar réplicas*.
 3. O banco de dados deve utilizar um volume persistente, utilizando **NFS**.
 
+**Dicas:**
+
+- Não será possível utilizar a imagem **PHP** do catálogo do Openshift pois não há suporte para **memcached**.
+- Uma imagem com todas as dependências pode ser gerada utilizando o `Dockerfile` presente no diretório `docker` deste repositório.
+- O comando `oc new-app` pode ser utilizado, mas será preciso alterar o diretório em que o Openshift procura o `Dockerfile`.
+
 ## Aplicação - php
 
-Esta aplicação utiliza 5 variáveis de ambiente para se conectar ao banco de dados:
+Esta aplicação utiliza 6 variáveis de ambiente, uma para o `php.ini` e as outras para se conectar ao banco de dados:
 
+ - PHP_INI
  - DB_HOST
  - DB_PORT
  - DB_USER
